@@ -1,0 +1,18 @@
+hash: 41522f1b68da11b8808826981c542dad5135e9be16ad91506677a96283906239
+updated: 2018-03-24T23:17:16.738552+01:00
+imports:
+- name: github.com/patrickmn/go-cache
+  version: a3647f8e31d79543b2d0f0ae2fe5c379d72cedc0
+- name: go.uber.org/atomic
+  version: 8474b86a5a6f79c443ce4b2992817ff32cf208b8
+- name: go.uber.org/multierr
+  version: 3c4937480c32f4c13a875a1829af76c98ca3d40a
+- name: go.uber.org/zap
+  version: e15639dab1b6ca5a651fe7ebfd8d682683b7d6a8
+  subpackages:
+  - buffer
+  - internal/bufferpool
+  - internal/color
+  - internal/exit
+  - zapcore
+testImports: []
