@@ -14,6 +14,7 @@ type Handler struct {
 	Skill                 Skill
 	Log                   *zap.SugaredLogger
 	ExpectedApplicationID string
+	SkipRequestValidation bool
 }
 
 type Skill interface {
@@ -23,7 +24,7 @@ type Skill interface {
 func (h *Handler) Handle(w http.ResponseWriter, req *http.Request) {
 	const timeLimit float64 = 150
 
-	if !IsValidAlexaRequest(w, req) {
+	if !h.SkipRequestValidation && !IsValidAlexaRequest(w, req) {
 		return
 	}
 
@@ -37,26 +38,26 @@ func (h *Handler) Handle(w http.ResponseWriter, req *http.Request) {
 	e = json.Unmarshal(requestBody, &alexaRequest)
 	if e != nil {
 		h.Log.Errorw("Error while unmarshaling request body", "error", e)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	if alexaRequest.Session == nil {
-		h.Log.Errorw("Session is empty", "error", e)
+		h.Log.Infow("Session is empty", "error", e)
 		http.Error(w, "Session is empty", http.StatusBadRequest)
 		return
 	}
 	if alexaRequest.Session.Application.ApplicationID != h.ExpectedApplicationID {
-		h.Log.Errorf("ApplicationID does not match: %v", alexaRequest.Session.Application.ApplicationID)
+		h.Log.Infof("ApplicationID does not match: %v", alexaRequest.Session.Application.ApplicationID)
 		http.Error(w, "Invalid ApplicationID", http.StatusBadRequest)
 		return
 	}
 	timestamp, e := time.Parse("2006-01-02T15:04:05Z", alexaRequest.Request.Timestamp)
 	if e != nil {
-		h.Log.Errorf("Invalid timestamp. Timestamp: %v", alexaRequest.Request.Timestamp)
+		h.Log.Infof("Invalid timestamp. Timestamp: %v", alexaRequest.Request.Timestamp)
 		http.Error(w, "Invalid Timestamp", http.StatusBadRequest)
 	}
 	if math.Abs(time.Since(timestamp).Seconds()) > timeLimit {
-		h.Log.Errorf("Timestamp not within time limit. Timestamp: %v", alexaRequest.Request.Timestamp)
+		h.Log.Infow("Timestamp not within time limit.", "timestamp", alexaRequest.Request.Timestamp, "difference", math.Abs(time.Since(timestamp).Seconds()))
 		http.Error(w, "Timestamp not within time limit", http.StatusBadRequest)
 		return
 	}
