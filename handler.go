@@ -55,6 +55,7 @@ func (h *Handler) Handle(w http.ResponseWriter, req *http.Request) {
 	if e != nil {
 		h.Log.Infof("Invalid timestamp. Timestamp: %v", alexaRequest.Request.Timestamp)
 		http.Error(w, "Invalid Timestamp", http.StatusBadRequest)
+		return
 	}
 	if math.Abs(time.Since(timestamp).Seconds()) > timeLimit {
 		h.Log.Infow("Timestamp not within time limit.", "timestamp", alexaRequest.Request.Timestamp, "difference", math.Abs(time.Since(timestamp).Seconds()))
