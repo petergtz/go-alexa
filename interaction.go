@@ -15,7 +15,7 @@ type Interaction struct {
 
 func InteractionFrom(requestEnv *RequestEnvelope) *Interaction {
 	timestamp := time.Now()
-	return &Interaction{
+	i := &Interaction{
 		RequestID:     requestEnv.Request.RequestID,
 		RequestType:   requestEnv.Request.Type,
 		UnixTimestamp: timestamp.Unix(),
@@ -24,6 +24,10 @@ func InteractionFrom(requestEnv *RequestEnvelope) *Interaction {
 		SessionID:     requestEnv.Session.SessionID,
 		Locale:        requestEnv.Request.Locale,
 	}
+	if requestEnv.Request.Type == "IntentRequest" {
+		return i.WithAttributes(map[string]interface{}{"Intent": requestEnv.Request.Intent.Name})
+	}
+	return i
 }
 
 func (i Interaction) WithAttributes(a map[string]interface{}) *Interaction {
