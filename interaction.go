@@ -13,6 +13,24 @@ type Interaction struct {
 	Attributes    map[string]interface{} `dynamodbav:"Attributes" json:"attributes"`
 }
 
+func InteractionFrom(requestEnv *RequestEnvelope) *Interaction {
+	timestamp := time.Now()
+	return &Interaction{
+		RequestID:     requestEnv.Request.RequestID,
+		RequestType:   requestEnv.Request.Type,
+		UnixTimestamp: timestamp.Unix(),
+		Timestamp:     timestamp,
+		UserID:        requestEnv.Session.User.UserID,
+		SessionID:     requestEnv.Session.SessionID,
+		Locale:        requestEnv.Request.Locale,
+	}
+}
+
+func (i Interaction) WithAttributes(a map[string]interface{}) *Interaction {
+	i.Attributes = a
+	return &i
+}
+
 type InteractionHistory interface {
 	GetInteractionsByUser(userID string) []*Interaction
 }
