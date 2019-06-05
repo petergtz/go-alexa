@@ -17,10 +17,10 @@ type RequestLogger struct {
 	tableName string
 }
 
-func NewInteractionLogger(accessKeyID, secretAccessKey string, logger *zap.SugaredLogger, tableName string) *RequestLogger {
+func NewInteractionLogger(accessKeyID, secretAccessKey, region string, logger *zap.SugaredLogger, tableName string) *RequestLogger {
 
 	dynamoClient := dynamodb.New(session.Must(session.NewSession(&aws.Config{
-		Region:      aws.String("eu-central-1"),
+		Region:      &region,
 		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, ""),
 	})))
 

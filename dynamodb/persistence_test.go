@@ -26,7 +26,7 @@ var _ = Describe("Persistence", func() {
 			logger.Fatal("env var SECRET_ACCESS_KEY not provided.")
 		}
 
-		persistence := dynamodb.NewInteractionLogger(os.Getenv("ACCESS_KEY_ID"), os.Getenv("SECRET_ACCESS_KEY"), logger.Sugar(), "TestAlexaWikipediaRequests")
+		persistence := dynamodb.NewInteractionLogger(os.Getenv("ACCESS_KEY_ID"), os.Getenv("SECRET_ACCESS_KEY"), "eu-central-1", logger.Sugar(), "TestAlexaWikipediaRequests")
 		persistence.Log(&alexa.Interaction{
 			RequestID:     uuid.NewV4().String(),
 			RequestType:   "RequestTestType",
