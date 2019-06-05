@@ -12,9 +12,10 @@ import (
 )
 
 type RequestLogger struct {
-	dynamo    *dynamodb.DynamoDB
-	logger    *zap.SugaredLogger
-	tableName string
+	dynamo          *dynamodb.DynamoDB
+	logger          *zap.SugaredLogger
+	tableName       string
+	interactionChan chan *alexa.Interaction
 }
 
 func NewInteractionLogger(accessKeyID, secretAccessKey, region string, logger *zap.SugaredLogger, tableName string) *RequestLogger {
@@ -24,14 +25,29 @@ func NewInteractionLogger(accessKeyID, secretAccessKey, region string, logger *z
 		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, ""),
 	})))
 
-	return &RequestLogger{
-		dynamo:    dynamoClient,
-		logger:    logger,
-		tableName: tableName,
+	p := &RequestLogger{
+		dynamo:          dynamoClient,
+		logger:          logger,
+		tableName:       tableName,
+		interactionChan: make(chan *alexa.Interaction, 100),
 	}
+
+	// Logging asynchronously to minimize latency when handling Alexa requests.
+	// Since we get very few requests at this point, it's perfectly fine to do this with a single worker.
+	go func() {
+		for interaction := range p.interactionChan {
+			p.doLog(interaction)
+		}
+	}()
+
+	return p
 }
 
 func (p *RequestLogger) Log(interaction *alexa.Interaction) {
+	p.interactionChan <- interaction
+}
+
+func (p *RequestLogger) doLog(interaction *alexa.Interaction) {
 	input, e := dynamodbattribute.MarshalMap(interaction)
 	if e != nil {
 		p.logger.Errorw("Could not marshal entry", "error", e)
