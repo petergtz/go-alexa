@@ -4,8 +4,6 @@ import (
 	"github.com/petergtz/go-alexa"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"go.uber.org/zap"
@@ -18,13 +16,7 @@ type RequestLogger struct {
 	interactionChan chan *alexa.Interaction
 }
 
-func NewInteractionLogger(accessKeyID, secretAccessKey, region string, logger *zap.SugaredLogger, tableName string) *RequestLogger {
-
-	dynamoClient := dynamodb.New(session.Must(session.NewSession(&aws.Config{
-		Region:      &region,
-		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, ""),
-	})))
-
+func NewInteractionLogger(dynamoClient *dynamodb.DynamoDB, logger *zap.SugaredLogger, tableName string) *RequestLogger {
 	p := &RequestLogger{
 		dynamo:          dynamoClient,
 		logger:          logger,
