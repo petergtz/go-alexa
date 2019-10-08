@@ -1,6 +1,9 @@
 package dynamodb
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/petergtz/go-alexa"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -55,13 +58,14 @@ func (p *RequestLogger) doLog(interaction *alexa.Interaction) {
 	}
 }
 
-func (p *RequestLogger) GetInteractionsByUser(userID string) []*alexa.Interaction {
+func (p *RequestLogger) GetInteractionsByUser(userID string, newerThan time.Time) []*alexa.Interaction {
 	result := make([]*alexa.Interaction, 0)
 	e := p.dynamo.QueryPages(&dynamodb.QueryInput{
 		IndexName:              aws.String("UserID-UnixTimestamp-index"),
-		KeyConditionExpression: aws.String("UserID = :userID"),
+		KeyConditionExpression: aws.String("UserID = :userID and UnixTimestamp > :timestamp"),
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":userID": &dynamodb.AttributeValue{S: &userID},
+			":userID":    &dynamodb.AttributeValue{S: &userID},
+			":timestamp": &dynamodb.AttributeValue{N: aws.String(fmt.Sprintf("%v", newerThan.Unix()))},
 		},
 		TableName: &p.tableName,
 	},

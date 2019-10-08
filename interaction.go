@@ -36,7 +36,7 @@ func (i Interaction) WithAttributes(a map[string]interface{}) *Interaction {
 }
 
 type InteractionHistory interface {
-	GetInteractionsByUser(userID string) []*Interaction
+	GetInteractionsByUser(userID string, nwerThan time.Time) []*Interaction
 }
 
 type InteractionLogger interface {
