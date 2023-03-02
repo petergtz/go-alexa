@@ -4,21 +4,16 @@ type RequestEnvelope struct {
 	Version string   `json:"version"`
 	Session *Session `json:"session"`
 	Request *Request `json:"request"`
-	// TODO Add Request Context
+	Context *Context `json:"context"`
 }
 
 // Session containes the session data from the Alexa request.
 type Session struct {
-	New        bool                   `json:"new"`
-	SessionID  string                 `json:"sessionId"`
-	Attributes map[string]interface{} `json:"attributes"`
-	User       struct {
-		UserID      string `json:"userId"`
-		AccessToken string `json:"accessToken"`
-	} `json:"user"`
-	Application struct {
-		ApplicationID string `json:"applicationId"`
-	} `json:"application"`
+	New         bool                   `json:"new"`
+	SessionID   string                 `json:"sessionId"`
+	Attributes  map[string]interface{} `json:"attributes"`
+	User        User                   `json:"user"`
+	Application Application            `json:"application"`
 }
 
 // Request contines the data in the request within the main request.
@@ -134,4 +129,29 @@ type DialogDirective struct {
 	SlotToElicit  string  `json:"slotToElicit,omitempty"`
 	SlotToConfirm string  `json:"slotToConfirm,omitempty"`
 	UpdatedIntent *Intent `json:"updatedIntent,omitempty"`
+}
+
+type Context struct {
+	System *System `json:"System"`
+}
+
+type System struct {
+	APIEndpoint    string       `json:"apiEndpoint"`
+	APIAccessToken string       `json:"apiAccessToken"`
+	Application    *Application `json:"application"`
+	Device         *Device      `json:"device"`
+	User           *User        `json:"user"`
+}
+
+type Application struct {
+	ApplicationID string `json:"applicationId"`
+}
+
+type Device struct {
+	DeviceID string `json:"deviceId"`
+}
+
+type User struct {
+	UserID      string `json:"userId"`
+	AccessToken string `json:"accessToken"`
 }
