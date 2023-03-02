@@ -5,8 +5,8 @@ go 1.12
 require (
 	github.com/aws/aws-lambda-go v1.13.2
 	github.com/aws/aws-sdk-go v1.19.42
-	github.com/onsi/ginkgo v1.8.0
-	github.com/onsi/gomega v1.5.0
+	github.com/onsi/ginkgo v1.16.4
+	github.com/onsi/gomega v1.27.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/satori/go.uuid v1.2.0
