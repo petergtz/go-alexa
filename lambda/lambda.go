@@ -28,14 +28,30 @@ func StartLambdaSkill(skill alexa.Skill, logger *zap.SugaredLogger) {
 		logger.Infow("Alexa Request",
 			"aws-request-id", lc.AwsRequestID,
 			"alexa-request-id", requestEnv.Request.RequestID,
-			"function-invocation-count", invocationCount,
+			"user-id", requestEnv.Session.User.UserID,
+			"session-id", requestEnv.Session.SessionID,
+			"locale", requestEnv.Request.Locale,
 			"type", requestEnv.Request.Type,
 			"intent", requestEnv.Request.Intent,
 			"session-attributes", requestEnv.Session.Attributes,
-			"locale", requestEnv.Request.Locale,
-			"user-id", requestEnv.Session.User.UserID,
-			"session-id", requestEnv.Session.SessionID)
+			"function-invocation-count", invocationCount,
+		)
 
-		return *skill.ProcessRequest(&requestEnv), nil
+		result := *skill.ProcessRequest(&requestEnv)
+
+		logger.Infow("Alexa Response",
+			"aws-request-id", lc.AwsRequestID,
+			"alexa-request-id", requestEnv.Request.RequestID,
+			"user-id", requestEnv.Session.User.UserID,
+			"session-id", requestEnv.Session.SessionID,
+			"locale", requestEnv.Request.Locale,
+			"type", requestEnv.Request.Type,
+			"intent", requestEnv.Request.Intent,
+			"speech", result.Response.OutputSpeech,
+			"directive", result.Response.Directives,
+			"session-attributes", result.SessionAttributes,
+		)
+
+		return result, nil
 	})
 }
