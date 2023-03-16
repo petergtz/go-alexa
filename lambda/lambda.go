@@ -47,8 +47,7 @@ func StartLambdaSkill(skill alexa.Skill, logger *zap.SugaredLogger) {
 			"locale", requestEnv.Request.Locale,
 			"type", requestEnv.Request.Type,
 			"intent", requestEnv.Request.Intent,
-			"speech", result.Response.OutputSpeech,
-			"directive", result.Response.Directives,
+			"response", result.Response,
 			"session-attributes", result.SessionAttributes,
 		)
 
