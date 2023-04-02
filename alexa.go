@@ -16,15 +16,21 @@ type Session struct {
 	Application Application            `json:"application"`
 }
 
-// Request contines the data in the request within the main request.
+// Request contains the data in the request within the main request.
 type Request struct {
-	Locale      string `json:"locale"`
-	Timestamp   string `json:"timestamp"`
-	Type        string `json:"type"`
-	RequestID   string `json:"requestId"`
-	DialogState string `json:"dialogState"`
-	Intent      Intent `json:"intent"`
-	Name        string `json:"name"`
+	Type        string             `json:"type"`
+	RequestID   string             `json:"requestId"`
+	Locale      string             `json:"locale"`
+	Timestamp   string             `json:"timestamp"`
+	DialogState string             `json:"dialogState"`
+	Intent      Intent             `json:"intent"`
+	Reason      string             `json:"reason"`
+	Error       *SessionEndedError `json:"error"`
+}
+
+type SessionEndedError struct {
+	Type    string `json:"type"`
+	Message string `json:"message"`
 }
 
 // Intent contains the data about the Alexa Intent requested.
