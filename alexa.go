@@ -154,7 +154,8 @@ type Application struct {
 }
 
 type Device struct {
-	DeviceID string `json:"deviceId"`
+	DeviceID            string                 `json:"deviceId"`
+	SupportedInterfaces map[string]interface{} `json:"supportedInterfaces"`
 }
 
 type User struct {
