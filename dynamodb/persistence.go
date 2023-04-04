@@ -64,8 +64,8 @@ func (p *RequestLogger) GetInteractionsByUser(userID string, newerThan time.Time
 		IndexName:              aws.String("UserID-UnixTimestamp-index"),
 		KeyConditionExpression: aws.String("UserID = :userID and UnixTimestamp > :timestamp"),
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":userID":    &dynamodb.AttributeValue{S: &userID},
-			":timestamp": &dynamodb.AttributeValue{N: aws.String(fmt.Sprintf("%v", newerThan.Unix()))},
+			":userID":    {S: &userID},
+			":timestamp": {N: aws.String(fmt.Sprintf("%v", newerThan.Unix()))},
 		},
 		TableName: &p.tableName,
 	},
