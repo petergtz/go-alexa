@@ -33,14 +33,37 @@ type Session struct {
 
 // Request contains the data in the request within the main request.
 type Request struct {
-	Type        string             `json:"type"`
-	RequestID   string             `json:"requestId"`
-	Locale      string             `json:"locale"`
-	Timestamp   string             `json:"timestamp"`
-	DialogState string             `json:"dialogState"`
-	Intent      Intent             `json:"intent"`
-	Reason      string             `json:"reason"`
-	Error       *SessionEndedError `json:"error"`
+	Type      string `json:"type"`
+	RequestID string `json:"requestId"`
+	Locale    string `json:"locale"`
+	Timestamp string `json:"timestamp"`
+
+	DialogState string `json:"dialogState"`
+
+	// Only for LaunchRequest
+	Target                     *LaunchRequestTarget   `json:"target"`
+	Meta                       *LaunchRequestMetadata `json:"metadata"`
+	Body                       interface{}            `json:"body"`
+	Payload                    interface{}            `json:"payload"`
+	TargetUri                  string                 `json:"targetURI"`
+	LaunchRequestType          string                 `json:"launchRequestType"`
+	ShouldLinkResultBeReturned bool                   `json:"shouldLinkResultBeReturned"`
+
+	// Only for IntentRequest
+	Intent Intent `json:"intent"`
+
+	// Only for SessionEndedRequest
+	Reason string             `json:"reason"`
+	Error  *SessionEndedError `json:"error"`
+}
+
+type LaunchRequestTarget struct {
+	Path    string `json:"path"`
+	Address string `json:"address"`
+}
+
+type LaunchRequestMetadata struct {
+	Referrer string `json:"referrer"`
 }
 
 type SessionEndedError struct {
