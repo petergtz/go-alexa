@@ -1,10 +1,25 @@
 package alexa
 
+import "encoding/json"
+
 type RequestEnvelope struct {
 	Version string   `json:"version"`
 	Session *Session `json:"session"`
 	Request *Request `json:"request"`
 	Context *Context `json:"context"`
+}
+
+func (requestEnv *RequestEnvelope) String() string {
+	if requestEnv == nil {
+		return "Not available."
+	}
+	r := *requestEnv
+	r.Session.User.AccessToken = "<REDACTED>"
+	buf, e := json.MarshalIndent(r, "", "  ")
+	if e != nil {
+		return "Error while marshalling request. Error: " + e.Error()
+	}
+	return string(buf)
 }
 
 // Session containes the session data from the Alexa request.
@@ -42,10 +57,10 @@ type Intent struct {
 
 // IntentSlot contains the data for one Slot
 type IntentSlot struct {
-	Name               string                  `json:"name"`
-	ConfirmationStatus string                  `json:"confirmationStatus,omitempty"`
-	Value              string                  `json:"value"`
-	Resolutions        ResolutionsPerAuthority `json:"resolutions"`
+	Name               string                   `json:"name"`
+	ConfirmationStatus string                   `json:"confirmationStatus,omitempty"`
+	Value              string                   `json:"value"`
+	Resolutions        *ResolutionsPerAuthority `json:"resolutions,omitempty"`
 }
 
 type ResolutionsPerAuthority struct {
@@ -135,6 +150,12 @@ type DialogDirective struct {
 	SlotToElicit  string  `json:"slotToElicit,omitempty"`
 	SlotToConfirm string  `json:"slotToConfirm,omitempty"`
 	UpdatedIntent *Intent `json:"updatedIntent,omitempty"`
+}
+
+type APLRenderDocumentDirective struct {
+	Type     string           `json:"type"`
+	Token    string           `json:"token"`
+	Document *json.RawMessage `json:"document"`
 }
 
 type Context struct {
