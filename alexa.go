@@ -44,7 +44,7 @@ type Request struct {
 	Target                     *LaunchRequestTarget   `json:"target"`
 	Meta                       *LaunchRequestMetadata `json:"metadata"`
 	Body                       interface{}            `json:"body"`
-	Payload                    interface{}            `json:"payload"`
+	Payload                    json.RawMessage        `json:"payload"`
 	TargetUri                  string                 `json:"targetURI"`
 	LaunchRequestType          string                 `json:"launchRequestType"`
 	ShouldLinkResultBeReturned bool                   `json:"shouldLinkResultBeReturned"`
