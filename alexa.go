@@ -55,6 +55,12 @@ type Request struct {
 	// Only for SessionEndedRequest
 	Reason string             `json:"reason"`
 	Error  *SessionEndedError `json:"error"`
+
+	// Only for Connections.Response
+	Name   string                     `json:"name"`
+	Status *ConnectionsResponseStatus `json:"status"`
+	// Payload already defined for LaunchRequest
+	Token string `json:"token"`
 }
 
 type LaunchRequestTarget struct {
@@ -103,6 +109,17 @@ type Value struct {
 type NameID struct {
 	Name string `json:"name"`
 	ID   string `json:"id"`
+}
+
+type ConnectionsResponseStatus struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type ConnectionsResponsePayload struct {
+	PurchaseResult string `json:"purchaseResult"`
+	ProductID      string `json:"productId"`
+	Message        string `json:"message"`
 }
 
 // ResponseEnvelope contains the Response and additional attributes.
@@ -179,6 +196,20 @@ type APLRenderDocumentDirective struct {
 	Type     string           `json:"type"`
 	Token    string           `json:"token"`
 	Document *json.RawMessage `json:"document"`
+}
+
+type ConnectionsSendRequestDirective struct {
+	Type    string                        `json:"type"`
+	Name    string                        `json:"name"`
+	Payload ConnectionsSendRequestPayload `json:"payload"`
+	Token   string                        `json:"token"`
+}
+type ConnectionsSendRequestPayload struct {
+	InSkillProduct InSkillProduct `json:"InSkillProduct"`
+}
+
+type InSkillProduct struct {
+	ProductID string `json:"productId"`
 }
 
 type Context struct {
