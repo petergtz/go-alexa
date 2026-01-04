@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/aws/aws-lambda-go v1.41.0
 	github.com/aws/aws-sdk-go v1.44.334
+	github.com/dustin/go-humanize v1.0.1
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.27.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
