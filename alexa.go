@@ -182,6 +182,7 @@ type Stream struct {
 	Token                string `json:"token"`
 	URL                  string `json:"url"`
 	OffsetInMilliseconds int    `json:"offsetInMilliseconds"`
+	ExpectedPreviousToken string `json:"expectedPreviousToken,omitempty"`
 }
 
 // DialogDirective contains directives for use in Dialog prompts.
